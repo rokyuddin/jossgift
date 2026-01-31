@@ -50,19 +50,6 @@ const featuredProducts = [
         image: "/images/birthday.png",
         badge: 'Best Seller',
     },
-    {
-        name: 'Sweet Harmony',
-        tagline: 'The perfect balance of milk and dark, creating a symphony of flavors.',
-        price: '৳950',
-        image: "/images/anniversary.png",
-    },
-    {
-        name: 'Royal Velvet',
-        tagline: 'Smooth, creamy, and undeniably regal. A texture that melts effortlessly.',
-        price: '৳2,450',
-        image: "/images/best-seller.png",
-        badge: 'Limited Edition',
-    },
 ];
 
 export function BestSellers() {
@@ -76,7 +63,7 @@ export function BestSellers() {
                 />
 
                 <StaggerItem
-                    className="gap-6 md:gap-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+                    className="gap-6 md:gap-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
                 >
                     {featuredProducts.map((product, index) => (
                         <StaggerItemChild

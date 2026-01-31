@@ -6,6 +6,7 @@ import { Button } from '@/components/atoms/button';
 import { Input } from '@/components/atoms/input';
 import { Separator } from '@/components/atoms/separator';
 import { StaggerItem, StaggerItemChild } from '../molecules/stagger-item';
+import { Container } from '../molecules/container';
 
 export function Footer() {
     const currentYear = new Date().getFullYear();
@@ -47,8 +48,8 @@ export function Footer() {
 
     return (
         <footer className="px-4 md:px-8 pt-8 pb-12 w-full">
-            <div
-                className="bg-card mx-auto p-8 md:p-16 border border-border/50 rounded-4xl max-w-7xl overflow-hidden"
+            <Container
+                className="bg-card p-8 md:p-16 border border-border/50 rounded-4xl overflow-hidden"
             >
                 <div className="gap-12 lg:gap-8 grid grid-cols-1 lg:grid-cols-12">
                     {/* Newsletter Section */}
@@ -68,7 +69,7 @@ export function Footer() {
                                     placeholder="Enter your email"
                                     className="bg-background/50 border-border/50 rounded-xl focus-visible:ring-primary/20 h-12"
                                 />
-                                <Button className="bg-foreground hover:bg-foreground/90 px-8 rounded-xl h-12 font-medium text-background active:scale-95 transition-all">
+                                <Button className='h-12 px-6'>
                                     Join
                                 </Button>
                             </StaggerItemChild>
@@ -129,7 +130,7 @@ export function Footer() {
                         </div>
                     </StaggerItemChild>
                 </StaggerItem>
-            </div>
+            </Container>
         </footer>
     );
 }

@@ -9,6 +9,8 @@ interface SectionHeadingProps {
     subtitle?: string;
     align?: 'left' | 'center';
     className?: string;
+    titleClassName?: string;
+    subtitleClassName?: string;
 }
 
 export function SectionHeading({
@@ -16,6 +18,8 @@ export function SectionHeading({
     subtitle,
     align = 'center',
     className,
+    titleClassName,
+    subtitleClassName,
 }: SectionHeadingProps) {
     return (
         <StaggerItem
@@ -26,13 +30,13 @@ export function SectionHeading({
             )}
         >
             <StaggerItemChild as='h2'
-                className="font-semibold text-foreground text-3xl md:text-4xl lg:text-5xl tracking-tight"
+                className={cn("font-semibold text-foreground text-3xl md:text-4xl lg:text-5xl tracking-tight", titleClassName)}
             >
                 {title}
             </StaggerItemChild>
             <AnimatePresence>
                 {subtitle && (
-                    <StaggerItemChild as='p' className="mx-auto max-w-2xl text-muted-foreground text-lg md:text-xl">
+                    <StaggerItemChild as='p' className={cn("mx-auto max-w-2xl text-muted-foreground text-lg md:text-xl", subtitleClassName)}>
                         {subtitle}
                     </StaggerItemChild>)}
             </AnimatePresence>

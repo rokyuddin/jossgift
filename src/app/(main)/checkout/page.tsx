@@ -7,6 +7,9 @@ import { ShippingProgress } from "@/features/checkout/components/shipping-progre
 import { GiftOptions } from "@/features/checkout/components/gift-options";
 import { ProductCard } from "@/features/landing";
 import { motion } from "motion/react";
+import { Section } from "@/components/molecules/section";
+import { Container } from "@/components/molecules/container";
+import { SectionHeading } from "@/components/molecules/section-heading";
 
 const RECOMMENDATIONS = [
     {
@@ -46,20 +49,15 @@ export default function CheckoutPage() {
     const taxEstimate = 0.0;
 
     return (
-        <div className="bg-background pt-12 pb-20 min-h-screen">
-            <div className="mx-auto px-4 max-w-7xl container">
-                <header className="mb-12">
-                    <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="flex items-baseline gap-3"
-                    >
-                        <h1 className="font-bold text-foreground text-4xl md:text-5xl tracking-tight">
-                            Shopping Cart
-                        </h1>
-                        <span className="font-medium text-muted-foreground text-xl">(2 items)</span>
-                    </motion.div>
-                </header>
+        <Section>
+            <Container>
+                <SectionHeading
+                title="Shopping Cart"
+                subtitle="(2 items)"
+                align="left"
+                className="md:mb-8 mb-6"
+                subtitleClassName="mx-0"
+                />
 
                 <div className="items-start gap-12 grid grid-cols-1 lg:grid-cols-12">
                     {/* Main Content Area */}
@@ -112,7 +110,7 @@ export default function CheckoutPage() {
                         ))}
                     </div>
                 </section>
-            </div>
-        </div>
+            </Container>
+        </Section>
     );
 }

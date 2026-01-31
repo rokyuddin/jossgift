@@ -7,10 +7,13 @@ import { Button } from '@/components/atoms/button';
 import { cn } from '@/lib/utils';
 import { motion } from 'motion/react';
 import { NAV_LINKS } from '@/lib/constants';
+import { Container } from '../molecules/container';
+import { usePathname } from 'next/navigation';
 
 export function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const pathname= usePathname();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -24,10 +27,10 @@ export function Navbar() {
         <nav
             className={cn(
                 'top-0 right-0 left-0 z-50 fixed px-4 md:px-8 transition-all duration-500 ease-out',
-                isScrolled ? 'py-3 bg-background/80 backdrop-blur-lg border-b border-border shadow-sm' : 'py-6 bg-transparent'
+                isScrolled ? 'py-3 bg-background/80 backdrop-blur-lg border-b border-border shadow-sm' : pathname === '/' ? 'py-6 bg-transparent' : 'py-6 bg-background'
             )}
         >
-            <div className="flex justify-between items-center mx-auto max-w-7xl">
+            <Container className="flex justify-between items-center">
                 {/* Logo */}
                 <Link href="/" className="group z-50 relative flex items-center gap-4">
                     <div className="flex justify-center items-center bg-primary shadow-sm rounded-xl w-10 h-10 font-bold text-primary-foreground text-lg group-hover:scale-105 transition-transform">
@@ -35,7 +38,7 @@ export function Navbar() {
                     </div>
                     <span className={cn(
                         'font-bold text-2xl tracking-tight transition-colors',
-                        isScrolled ? 'text-foreground' : 'text-primary-foreground'
+                        isScrolled ? 'text-foreground' : pathname === '/' ? 'text-primary-foreground' : 'text-primary'
                     )}>
                         JossGift
                     </span>
@@ -49,7 +52,7 @@ export function Navbar() {
                             href={item.href}
                             className={cn(
                                 'font-medium hover:text-accent text-sm transition-colors',
-                                isScrolled ? 'text-foreground/80' : 'text-primary-foreground/80 hover:text-primary-foreground'
+                                isScrolled ? 'text-foreground/80' : pathname === '/' ? 'text-primary-foreground/80 hover:text-primary-foreground' : 'text-primary'
                             )}
                         >
                             {item.label}
@@ -65,28 +68,28 @@ export function Navbar() {
                             size="icon"
                             className={cn(
                                 'rounded-full',
-                                isScrolled ? 'text-foreground' : 'text-primary-foreground hover:bg-primary-foreground/10'
+                                isScrolled ? 'text-foreground' : pathname === '/' ? 'text-primary-foreground hover:bg-primary-foreground/10' : 'text-primary'
                             )}
                         >
-                            <Heart className="w-5 h-5" />
+                            <Heart className="size-5" />
                         </Button>
                     </Link>
+                    <Link href={"/checkout"}>
                     <Button
                         variant="ghost"
                         size="icon"
                         className={cn(
                             'rounded-full',
-                            isScrolled ? 'text-foreground' : 'text-primary-foreground hover:bg-primary-foreground/10'
+                            isScrolled ? 'text-foreground' : pathname === '/' ? 'text-primary-foreground hover:bg-primary-foreground/10' : 'text-primary'
                         )}
-                    >
-                        <ShoppingBag className="w-5 h-5" />
+                        >
+                        <ShoppingBag className="size-5" />
                     </Button>
+                        </Link>
                     <Button
-                        className={cn(
-                            'hidden md:flex shadow-lg px-6 rounded-xl h-10',
-                            !isScrolled && 'bg-accent text-accent-foreground hover:bg-accent/90 border-none'
-                        )}
+                    size={'lg'}
                     >
+                        
                         Shop Gifts
                     </Button>
 
@@ -101,7 +104,7 @@ export function Navbar() {
                         {mobileMenuOpen ? <X /> : <Menu />}
                     </button>
                 </div>
-            </div>
+            </Container>
 
             {/* Mobile Menu */}
             <motion.div

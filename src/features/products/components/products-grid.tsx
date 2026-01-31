@@ -1,16 +1,10 @@
 "use client";
 
+import { StaggerItem, StaggerItemChild } from "@/components/molecules/stagger-item";
 import { ProductCard } from "@/features/landing/components/product-card";
 import { motion } from "motion/react";
 
 const products = [
-    {
-        name: "Classic Milk Selection",
-        tagline: "Extra smooth artisan milk chocolates with hazelnut praline",
-        price: "$45.00",
-        image: "https://images.unsplash.com/photo-1549007994-cb92ad714a64?q=80&w=800&auto=format&fit=crop",
-        badge: "Bestseller"
-    },
     {
         name: "Dark Midnight Box",
         tagline: "70% cocoa single-origin dark chocolate assortments",
@@ -46,42 +40,18 @@ const products = [
     }
 ];
 
-const container = {
-    hidden: { opacity: 0 },
-    show: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.1,
-            delayChildren: 0.2
-        }
-    }
-} as const;
-
-const item = {
-    hidden: { opacity: 0, y: 10 },
-    show: {
-        opacity: 1,
-        y: 0,
-        transition: {
-            duration: 0.5,
-            ease: "easeOut"
-        }
-    }
-} as const;
+;
 
 export function ProductsGrid() {
     return (
-        <motion.div
-            variants={container}
-            initial="hidden"
-            animate="show"
-            className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+        <StaggerItem
+            className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2"
         >
             {products.map((product) => (
-                <motion.div key={product.name} variants={item}>
+                <StaggerItemChild key={product.name} as='div'>
                     <ProductCard {...product} />
-                </motion.div>
+                </StaggerItemChild>
             ))}
-        </motion.div>
+        </StaggerItem>
     );
 }
