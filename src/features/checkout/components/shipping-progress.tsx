@@ -4,14 +4,12 @@ import { Progress } from "@/components/atoms/progress";
 import { Truck } from "lucide-react";
 import { motion } from "motion/react";
 
-interface ShippingProgressProps {
-    subtotal: number;
-    freeShippingThreshold: number;
-}
 
-export function ShippingProgress({ subtotal, freeShippingThreshold }: ShippingProgressProps) {
-    const remaining = Math.max(0, freeShippingThreshold - subtotal);
-    const percentage = Math.min(100, (subtotal / freeShippingThreshold) * 100);
+export function ShippingProgress() {
+    const FREE_SHIPPING_THRESHOLD = 2000.0;
+    const subtotal = 100;
+    const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
+    const percentage = Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100);
 
     return (
         <motion.div

@@ -4,19 +4,11 @@ import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import { ShieldCheck, RefreshCw, CreditCard } from "lucide-react";
 import { motion } from "motion/react";
-import { cn } from "@/lib/utils";
 
-interface OrderSummaryProps {
-    subtotal: number;
-    shippingEstimate: number;
-    taxEstimate: number;
-}
-
-export function OrderSummary({
-    subtotal,
-    shippingEstimate,
-    taxEstimate,
-}: OrderSummaryProps) {
+export function OrderSummary() {
+    const subtotal = 100;
+    const shippingEstimate = 10;
+    const taxEstimate = 5;
     const total = subtotal + shippingEstimate + taxEstimate;
 
     return (
@@ -66,7 +58,7 @@ export function OrderSummary({
 
                 <div className="flex justify-center items-center gap-4 opacity-60 mt-6">
                     <CreditCard className="size-5" />
-                    <div className="bg-border w-[1px] h-4" />
+                    <div className="bg-border w-px h-4" />
                     <span className="font-bold text-[10px] uppercase tracking-widest">VISA • MC • AMEX • PAY</span>
                 </div>
             </motion.div>

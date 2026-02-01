@@ -1,73 +1,118 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Button } from '@/components/atoms/button';
 import { Container } from '@/components/molecules/container';
 import { Section } from '@/components/molecules/section';
 import { StaggerItem, StaggerItemChild } from '@/components/molecules/stagger-item';
+import { cn } from '@/lib/utils';
+import { ArrowRight, Gift, Sparkles } from 'lucide-react';
+
+const HERO_IMAGES = [
+    '/hero/1.webp',
+    '/hero/2.webp',
+    '/hero/3.webp'
+];
 
 export function Hero() {
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentImageIndex((prev) => (prev + 1) % HERO_IMAGES.length);
+        }, 5000); // Change image every 5 seconds
+
+        return () => clearInterval(interval);
+    }, []);
+
     return (
-        <Section className="relative flex justify-center items-center h-[90vh] min-h-[600px] overflow-hidden">
-            {/* Immersive Background */}
-            <div className="z-0 absolute inset-0">
-                <motion.div
-                    initial={{ scale: 1.1, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 1.2, ease: "easeOut" }}
-                    className="relative w-full h-full"
+        <Section className="relative flex justify-center items-center overflow-hidden">
+            {/* Background Carousel */}
+
+            {/* Content */}
+            <Container className='z-10 relative text-center'>
+                <AnimatePresence mode="popLayout">
+                    <motion.div
+                        key={currentImageIndex}
+                        initial={{ opacity: 0, scale: 1.1 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 1.5, ease: "easeOut" }}
+                        className="h-[40svh]"
+                    >
+                        <Image
+                            src={HERO_IMAGES[currentImageIndex]}
+                            alt={`Hero image ${currentImageIndex + 1}`}
+                            fill
+                            className="object-cover"
+                            priority
+                        />
+                    </motion.div>
+                </AnimatePresence>
+                {/* <StaggerItem
+                    className="flex flex-col items-center space-y-8"
+                    viewport={{ once: true }}
                 >
-                    <Image
-                        src="/images/hero-chocolate.png"
-                        alt="Premium Chocolate Artistry"
-                        fill
-                        priority
-                        className="object-cover"
-                    />
-                    {/* Premium Overlay Gradient */}
-                    <div className="absolute inset-0 bg-linear-to-t from-primary via-background/60 to-foreground/20" />
-                </motion.div>
-            </div>
-
-            <Container className='z-10 relative text-foreground text-center'>
-                <StaggerItem
-                    className="space-y-6 md:space-y-8"
-                >
-                    {/* Badge / Slogan */}
-                    <StaggerItemChild as='span' className="inline-block bg-primary/10 backdrop-blur-sm px-4 py-1.5 border border-primary/20 rounded-full font-medium text-primary text-sm uppercase tracking-widest">
-                        The Art of Gifting
+                    <StaggerItemChild>
+                        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md mb-2 px-4 py-1.5 border border-white/20 rounded-full font-medium text-primary-foreground/90 text-sm uppercase tracking-widest">
+                            <Sparkles className="w-3.5 h-3.5 text-primary" />
+                            <span>The Art of Gifting</span>
+                        </div>
                     </StaggerItemChild>
 
-                    {/* Main Heading */}
-                    <StaggerItemChild as='h1' className="mx-auto max-w-4xl font-bold text-white text-4xl md:text-6xl lg:text-7xl leading-[1.1] tracking-tight">
-                        Not Just a Gift Box <br />
-                        <span className="text-primary italic">It's a Story with Chocolate</span>
+                    <StaggerItemChild>
+                        <h1 className="mx-auto max-w-5xl font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-balance leading-[1.1] sm:leading-[1.1] tracking-tight">
+                            Not Just a Gift Box, <br />
+                            <span className="text-primary italic">It's a Story.</span>
+                        </h1>
                     </StaggerItemChild>
 
-                    {/* Subheading */}
-                    <StaggerItemChild as='p' className="mx-auto max-w-2xl text-white/90 text-lg md:text-xl leading-relaxed">
-                        Premium chocolate collections crafted to express emotions, celebrate moments, and surprise hearts across Bangladesh.
+                    <StaggerItemChild>
+                        <p className="mx-auto max-w-2xl text-white/80 text-lg md:text-xl text-balance leading-relaxed">
+                            Premium chocolate collections crafted to express emotions, celebrate moments, and surprise hearts across Bangladesh.
+                        </p>
                     </StaggerItemChild>
 
-                    {/* CTAs */}
-                    <StaggerItemChild as='div' className="flex sm:flex-row flex-col justify-center items-center gap-4 pt-4">
-                        <Button
-                            size="lg"
-                            className="bg-primary hover:bg-primary/90 shadow-lg hover:shadow-primary/25 px-8 py-7 rounded-full w-full sm:w-auto font-semibold text-lg transition-all"
-                        >
-                            Shop Gifts
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="lg"
-                            className="bg-white/5 hover:bg-white/10 backdrop-blur-md px-8 py-7 border-white/20 rounded-full w-full sm:w-auto text-white hover:text-white text-lg transition-all"
-                        >
-                            Explore Occasions
-                        </Button>
+                    <StaggerItemChild>
+                        <div className="flex sm:flex-row flex-col items-center gap-4 pt-4 w-full sm:w-auto">
+                            <Button
+                                size="xl"
+                                className="group bg-primary hover:bg-primary/90 rounded-full w-full sm:w-auto font-semibold text-lg transition-all"
+                            >
+                                Shop Collections
+                                <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="xl"
+                                className="bg-white/5 hover:bg-white/10 backdrop-blur-md border-white/20 hover:border-white/40 rounded-full w-full sm:w-auto text-white hover:text-white text-lg transition-all"
+                            >
+                                <Gift className="mr-2 w-4 h-4" />
+                                Explore Occasions
+                            </Button>
+                        </div>
                     </StaggerItemChild>
-                </StaggerItem>
+                </StaggerItem> */}
             </Container>
-        </Section >
+
+            {/* Carousel Indicators */}
+            <div className="bottom-8 z-20 absolute flex gap-3">
+                {HERO_IMAGES.map((_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => setCurrentImageIndex(index)}
+                        className={cn(
+                            "backdrop-blur-sm rounded-full h-1.5 transition-all duration-300",
+                            index === currentImageIndex
+                                ? "w-8 bg-primary  shadow-lg"
+                                : "w-1.5 bg-primary"
+                        )}
+                        aria-label={`Go to slide ${index + 1}`}
+                    />
+                ))}
+            </div>
+        </Section>
     );
 }

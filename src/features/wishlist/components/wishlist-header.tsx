@@ -4,12 +4,11 @@ import { motion } from "motion/react";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/atoms/breadcrumb";
 import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/atoms/button";
+import { useWishlistStore } from "@/store/use-wishlist-store";
 
-interface WishlistHeaderProps {
-    itemCount: number;
-}
 
-export function WishlistHeader({ itemCount }: WishlistHeaderProps) {
+export function WishlistHeader() {
+    const wishlistCount = useWishlistStore((state) => state.items.length);
     return (
         <div className="space-y-6 mb-12">
             <Breadcrumb>
@@ -33,9 +32,9 @@ export function WishlistHeader({ itemCount }: WishlistHeaderProps) {
                         className="font-bold text-4xl md:text-5xl tracking-tight"
                     >
                         My Wishlist
-                        {itemCount > 0 && (
+                        {wishlistCount > 0 && (
                             <span className="ml-4 font-normal text-muted-foreground/60 text-2xl">
-                                ({itemCount})
+                                ({wishlistCount})
                             </span>
                         )}
                     </motion.h1>

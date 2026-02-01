@@ -1,13 +1,14 @@
 "use client";
 
 import Image from 'next/image';
-import { Button, buttonVariants } from '@/components/atoms/button';
+import { Button } from '@/components/atoms/button';
 import { Badge } from '@/components/atoms/badge';
-import { cn } from '@/lib/utils';
-import { motion } from 'motion/react';
 import { Card, CardContent, CardFooter } from '@/components/atoms/card';
-import { ArrowRight, ArrowUpRight, BookOpenText, Eye, Heart, PlusIcon, ShoppingBag, ShoppingBasket } from 'lucide-react';
+import { ArrowUpRight, Eye, Heart, Minus, Plus, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
+import { useCartStore } from '@/store/use-cart-store';
+import { useWishlistStore } from '@/store/use-wishlist-store';
+import { cn } from '@/lib/utils';
 
 interface ProductCardProps {
     name: string;
@@ -15,8 +16,6 @@ interface ProductCardProps {
     price: string;
     image?: string;
     badge?: string;
-    className?: string;
-    isWishlist?: boolean;
 }
 
 export function ProductCard({
@@ -25,9 +24,52 @@ export function ProductCard({
     price,
     image,
     badge,
-    className,
-    isWishlist,
 }: ProductCardProps) {
+    const { items, addItem, updateQuantity, removeItem } = useCartStore();
+    const cartItem = items.find((item) => item.id === name);
+    const { items: wishlistItems, toggleItem } = useWishlistStore();
+    const isInWishlistStore = wishlistItems.some((item) => item.id === name);
+
+    const handleAddToCart = () => {
+        const numericPrice = parseFloat(price.replace(/[^0-9.]/g, ''));
+        addItem({
+            id: name, // Using name as ID for now since we don't have real IDs
+            name,
+            price: isNaN(numericPrice) ? 0 : numericPrice,
+            quantity: 1,
+            image: image || '',
+            details: { tagline }, // Storing tagline as detail
+        });
+    };
+
+    const handleToggleWishlist = () => {
+        toggleItem({
+            id: name,
+            name,
+            price,
+            image: image || '',
+            category: 'General', // Default category
+            inStock: true, // Defaulting to true as card doesn't have this info
+            tagline,
+        });
+    };
+
+    const handleIncrease = () => {
+        if (cartItem) {
+            updateQuantity(name, cartItem.quantity + 1);
+        }
+    };
+
+    const handleDecrease = () => {
+        if (cartItem) {
+            if (cartItem.quantity > 1) {
+                updateQuantity(name, cartItem.quantity - 1);
+            } else {
+                removeItem(name);
+            }
+        }
+    };
+
     return (
         <Card className='pt-4'>
             <div className="group relative bg-muted mx-4 rounded-2xl aspect-square overflow-hidden">
@@ -51,26 +93,25 @@ export function ProductCard({
                 )}
 
                 {/* Quick Add Overlay (Desktop) */}
-                       <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out">
-          <Button
-            variant="secondary"
-            size="icon"
-            className="backdrop-blur-xl bg-white/90 hover:bg-white shadow-lg"
-          >
-            <Heart
-              className={`size-5 transition-colors ${
-                isWishlist ? 'fill-red-500 text-red-500' : 'text-gray-700'
-              }`}
-            />
-          </Button>
-          <Button
-            variant="secondary"
-            size="icon"
-            className="backdrop-blur-xl bg-white/90 hover:bg-white shadow-lg"
-          >
-            <Eye className="size-5 text-gray-700" />
-          </Button>
-        </div>
+                <div className="top-3 right-3 absolute flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0 duration-300 ease-out">
+                    <Button
+                        variant="secondary"
+                        size="icon"
+                        onClick={handleToggleWishlist}
+                    >
+                        <Heart
+                            className={cn({
+                                'fill-red-500 text-red-500': isInWishlistStore,
+                            })}
+                        />
+                    </Button>
+                    <Button
+                        variant="secondary"
+                        size="icon"
+                    >
+                        <Eye />
+                    </Button>
+                </div>
             </div>
 
             <CardContent className='pt-0 h-16'>
@@ -80,9 +121,9 @@ export function ProductCard({
                         {name}
                     </h3>
                     <Link href={`/products/${name}`}>
-                    <Button variant="outline" size={'icon-lg'} className='rounded-full'>
-                        <ArrowUpRight />
-                    </Button>
+                        <Button variant="outline" size={'icon-lg'} className='rounded-full'>
+                            <ArrowUpRight />
+                        </Button>
                     </Link>
                 </div>
                 <p className="mt-1 text-muted-foreground text-sm line-clamp-2 leading-relaxed">
@@ -97,12 +138,36 @@ export function ProductCard({
                         {price}
                     </span>
                 </div>
-                <Button className='flex-1'>
-                    <ShoppingBag />
-                    Add to Cart
-                </Button>
+                {cartItem ? (
+                    <div className="flex items-center gap-3 bg-secondary/50 p-1 rounded-xl h-10">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="w-8 h-8"
+                            onClick={handleDecrease}
+                        >
+                            <Minus className="size-4" />
+                        </Button>
+                        <span className="w-4 font-semibold text-sm text-center">
+                            {cartItem.quantity}
+                        </span>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="w-8 h-8"
+                            onClick={handleIncrease}
+                        >
+                            <Plus className="size-4" />
+                        </Button>
+                    </div>
+                ) : (
+                    <Button className='flex-1' onClick={handleAddToCart}>
+                        <ShoppingBag />
+                        Add to Cart
+                    </Button>
+                )}
             </CardFooter>
-        </Card>
+        </Card >
     );
 }
 

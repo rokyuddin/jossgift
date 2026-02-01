@@ -1,10 +1,10 @@
 "use client";
 
-import { motion } from 'motion/react';
 import { Section } from '@/components/molecules/section';
 import { SectionHeading } from '@/components/molecules/section-heading';
 import { ReviewCard } from './review-card';
 import { Container } from '@/components/molecules/container';
+import { InfiniteSlider } from '@/components/atoms/infinite-slider';
 
 const reviews = [
     {
@@ -32,36 +32,55 @@ const reviews = [
         text: 'Finally a premium chocolate brand in BD that matches international standards. Loved the packaging!',
         occasion: 'Just Because',
     },
+    {
+        name: 'Ishraq Hossain',
+        text: 'The distinct cocoa depth in the dark chocolate collection is unmatched. A true connoisseur\'s choice.',
+        occasion: 'Personal Treat',
+    },
 ];
 
 export function CustomerReviews() {
     return (
-        <Section variant="muted" className="py-24">
-            <Container>
+        <Section variant="muted" className="relative py-24 overflow-hidden">
+            {/* Ambient Background */}
+            <div className="top-1/2 left-1/2 -z-10 absolute bg-primary/5 blur-[120px] rounded-full w-[800px] h-[800px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+
+            <Container className='relative'>
                 <SectionHeading
                     title="Hearts Touched by JossGift"
                     subtitle="Stories of love, gratitude, and celebration shared by our wonderful community."
                     className="mb-12 md:mb-16"
                 />
 
-                {/* Horizontal Scroll Carousel for all screens */}
-                <div
-                    className="flex gap-6 -mx-4 md:mx-0 px-4 md:px-0 pb-8 overflow-x-auto snap-mandatory snap-x scrollbar-hide"
-                >
-                    {reviews.map((review, index) => (
-                        <motion.div
-                            key={index}
-                            initial={{ opacity: 0, x: 20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1, duration: 0.5 }}
-                            className="flex-shrink-0 min-w-[300px] md:min-w-[400px] snap-center"
-                        >
-                            <ReviewCard {...review} className="h-full" />
-                        </motion.div>
-                    ))}
+                <div className="relative h-[600px] mask-[linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)]">
+                    <div className="gap-6 grid grid-cols-1 md:grid-cols-3 h-full">
+                        {/* Column 1 - Upwards */}
+                        <div className="h-full overflow-hidden">
+                            <InfiniteSlider direction='vertical' speed={40} gap={24}>
+                                {reviews.map((review, index) => (
+                                    <ReviewCard key={`col1-${index}`} {...review} className="w-full" />
+                                ))}
+                            </InfiniteSlider>
+                        </div>
+
+                        {/* Column 2 - Downwards (Hidden on mobile) */}
+                        <div className="hidden md:block h-full overflow-hidden">
+                            <InfiniteSlider direction='vertical' reverse speed={55} gap={24}>
+                                {[...reviews].reverse().map((review, index) => (
+                                    <ReviewCard key={`col2-${index}`} {...review} className="w-full" />
+                                ))}
+                            </InfiniteSlider>
+                        </div>
+                        <div className="hidden md:block h-full overflow-hidden">
+                            <InfiniteSlider direction='vertical' speed={40} gap={24}>
+                                {[...reviews].reverse().map((review, index) => (
+                                    <ReviewCard key={`col2-${index}`} {...review} className="w-full" />
+                                ))}
+                            </InfiniteSlider>
+                        </div>
+                    </div>
                 </div>
-            </Container>
-        </Section>
+            </Container >
+        </Section >
     );
 }
