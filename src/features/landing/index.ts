@@ -6,7 +6,6 @@ export * from './components/hero';
 export * from './components/how-it-works';
 export * from './components/new-arrivals';
 export * from './components/occasion-card';
-export * from './components/product-card';
 export * from './components/product-details-view';
 export * from './components/product-gallery';
 export * from './components/product-info';

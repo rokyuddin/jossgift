@@ -156,7 +156,13 @@
     @apply border-border outline-ring/50;
   }
 
+  /* Smooth scrolling for anchor links */
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground;
   }
+
 }

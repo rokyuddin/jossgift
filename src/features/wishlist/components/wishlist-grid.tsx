@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/atoms/select";
 import { Button } from "@/components/atoms/button";
 import { ArrowUpDown, Grid2X2, LayoutList, Heart } from "lucide-react";
-import { StaggerItem, StaggerItemChild } from "@/components/molecules/stagger-item";
+import { InView } from '@/components/atoms/in-view';
 import { useCartStore } from "@/store/use-cart-store";
 import { useWishlistStore } from "@/store/use-wishlist-store";
 
@@ -26,7 +26,7 @@ export function WishlistGrid() {
                 price: isNaN(numericPrice) ? 0 : numericPrice,
                 quantity: 1,
                 image: item.image,
-                details: { tagline: item.tagline },
+                details: { tagline: item.tagline || "" },
             });
             removeItem(id);
         }
@@ -85,17 +85,17 @@ export function WishlistGrid() {
                 </div>
             </div>
 
-            <StaggerItem className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <InView stagger className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {wishlistItems.map((item) => (
-                    <StaggerItemChild key={item.id}>
+                    <InView.Item key={item.id}>
                         <WishlistItem
                             {...item}
                             onRemove={removeItem}
                             onMoveToCart={handleMoveToCart}
                         />
-                    </StaggerItemChild>
+                    </InView.Item>
                 ))}
-            </StaggerItem>
+            </InView>
         </div>
     );
 }

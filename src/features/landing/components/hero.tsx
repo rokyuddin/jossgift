@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Button } from '@/components/atoms/button';
 import { Container } from '@/components/molecules/container';
 import { Section } from '@/components/molecules/section';
-import { StaggerItem, StaggerItemChild } from '@/components/molecules/stagger-item';
+// import { InView } from '@/components/atoms/in-view'; // Uncomment when needed
 import { cn } from '@/lib/utils';
 import { ArrowRight, Gift, Sparkles } from 'lucide-react';
 

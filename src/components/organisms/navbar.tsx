@@ -39,7 +39,12 @@ export function Navbar() {
         >
             <Container className="flex justify-between items-center">
                 {/* Logo */}
-                <Link href="/" className="group z-50 relative flex items-center gap-4">
+                <Link href="/" onNavigate={(e) => {
+                    if (pathname === '/') {
+                        e.preventDefault();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                }} className="group z-50 relative flex items-center gap-4">
                     <div className="flex justify-center items-center bg-primary shadow-sm rounded-xl w-10 h-10 font-bold text-primary-foreground text-lg group-hover:scale-105 transition-transform">
                         J
                     </div>
@@ -57,6 +62,12 @@ export function Navbar() {
                         <Link
                             key={item.label}
                             href={item.href}
+                            onNavigate={(e) => {
+                                if (pathname === item.href) {
+                                    e.preventDefault();
+                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                }
+                            }}
                             className={cn(
                                 'font-medium hover:text-accent text-sm transition-colors',
                                 isScrolled ? 'text-foreground/80' : 'text-primary'
@@ -109,14 +120,20 @@ export function Navbar() {
                     !mobileMenuOpen && 'pointer-events-none'
                 )}
             >
-                {['Home', 'Shop', 'Occasions', 'Corporate', 'Contact'].map((item) => (
+                {NAV_LINKS.map((item) => (
                     <Link
-                        key={item}
-                        href={`#${item.toLowerCase()}`}
-                        onClick={() => setMobileMenuOpen(false)}
+                        key={item.label}
+                        href={item.href}
+                        onClick={(e) => {
+                            if (pathname === item.href) {
+                                e.preventDefault();
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }
+                            setMobileMenuOpen(false);
+                        }}
                         className="font-semibold text-foreground hover:text-primary text-2xl transition-colors"
                     >
-                        {item}
+                        {item.label}
                     </Link>
                 ))}
                 <Button className="mt-8 rounded-2xl w-full h-14 text-xl">

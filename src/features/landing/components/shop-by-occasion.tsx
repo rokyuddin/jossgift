@@ -1,11 +1,10 @@
 "use client";
 
-import { motion } from 'motion/react';
 import { Section } from '@/components/molecules/section';
 import { SectionHeading } from '@/components/molecules/section-heading';
 import { OccasionCard } from './occasion-card';
 import { Container } from '@/components/molecules/container';
-import { StaggerItem, StaggerItemChild } from '@/components/molecules/stagger-item';
+import { InView } from '@/components/atoms/in-view';
 
 const occasions = [
     { title: 'Birthday', image: '/images/birthday.png' },
@@ -20,7 +19,7 @@ const occasions = [
 
 export function ShopByOccasion() {
     return (
-        <Section className="overflow-hidden md:pb-6">
+        <Section className="md:pb-6 overflow-hidden">
             <Container>
                 <SectionHeading
                     title="Shop by Occasion"
@@ -28,21 +27,25 @@ export function ShopByOccasion() {
                 />
 
                 {/* Categories Container */}
-                <StaggerItem
-                    className="flex md:grid md:grid-cols-4 lg:grid-cols-8 gap-6 md:gap-8 -mx-4 md:mx-0 px-4 md:px-0 overflow-x-auto md:overflow-visible scrollbar-hide snap-x snap-mandatory pb-4 md:pb-0"
+                <InView
+                    stagger
+                    staggerDelay={0.08}
+                    delayChildren={0.1}
+                    className="flex gap-6 md:gap-8 md:grid md:grid-cols-4 lg:grid-cols-8 -mx-4 md:mx-0 px-4 md:px-0 pb-4 md:pb-0 md:overflow-visible overflow-x-auto snap-mandatory snap-x scrollbar-hide"
                 >
                     {occasions.map((occasion, index) => (
-                        <StaggerItemChild
+                        <InView.Item
                             key={index}
+                            direction="up"
                             className="snap-start shrink-0"
                         >
                             <OccasionCard
                                 title={occasion.title}
                                 image={occasion.image}
                             />
-                        </StaggerItemChild>
+                        </InView.Item>
                     ))}
-                </StaggerItem>
+                </InView>
             </Container>
         </Section>
     );

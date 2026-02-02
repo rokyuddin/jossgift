@@ -1,7 +1,7 @@
 "use client";
 
-import { StaggerItem, StaggerItemChild } from "@/components/molecules/stagger-item";
-import { ProductCard } from "@/features/landing/components/product-card";
+import { InView } from '@/components/atoms/in-view';
+import { ProductCard } from "@/features/products/components/product-card";
 import { motion } from "motion/react";
 
 const products = [
@@ -44,14 +44,14 @@ const products = [
 
 export function ProductsGrid() {
     return (
-        <StaggerItem
+        <InView stagger
             className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2"
         >
             {products.map((product) => (
-                <StaggerItemChild key={product.name} as='div'>
+                <InView.Item key={product.name} as='div'>
                     <ProductCard {...product} />
-                </StaggerItemChild>
+                </InView.Item>
             ))}
-        </StaggerItem>
+        </InView>
     );
 }

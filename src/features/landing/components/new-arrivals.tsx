@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/molecules/container";
 import { Section } from "@/components/molecules/section";
-import { StaggerItem, StaggerItemChild } from "@/components/molecules/stagger-item";
+import { InView } from '@/components/atoms/in-view';
 import { cn } from "@/lib/utils";
 
 const NEW_ARRIVALS = [
@@ -32,8 +32,8 @@ export function NewArrivals() {
     return (
         <Section id="new-arrivals">
             <Container>
-                <StaggerItem className="space-y-8">
-                    <StaggerItemChild direction="up" className="flex justify-between items-end">
+                <InView stagger className="space-y-8">
+                    <InView.Item direction="up" className="flex justify-between items-end">
                         <h2 className="font-semibold text-3xl md:text-4xl tracking-tight">
                             New Arrivals
                         </h2>
@@ -44,11 +44,11 @@ export function NewArrivals() {
                             Browse All
                             <ArrowUpRight className="w-4 h-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                         </Link>
-                    </StaggerItemChild>
+                    </InView.Item>
 
                     <div className="gap-6 grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 h-[600px] md:h-[700px]">
                         {NEW_ARRIVALS.map((item, index) => (
-                            <StaggerItemChild
+                            <InView.Item
                                 key={item.title}
                                 direction="up"
                                 className={cn(
@@ -84,10 +84,10 @@ export function NewArrivals() {
                                         )}
                                     </div>
                                 </Link>
-                            </StaggerItemChild>
+                            </InView.Item>
                         ))}
                     </div>
-                </StaggerItem>
+                </InView>
             </Container>
         </Section>
     );

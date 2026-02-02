@@ -24,6 +24,7 @@ export const useCartStore = create<CartState>()(
     persist(
         (set) => ({
             items: [],
+            quickViewItem: null,
             addItem: (newItem) =>
                 set((state) => {
                     const existingItem = state.items.find((item) => item.id === newItem.id);
