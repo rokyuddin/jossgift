@@ -1,73 +1,63 @@
 "use client";
 
 import Image from 'next/image';
-import { motion } from 'motion/react';
-import { Button } from '@/components/atoms/button';
+import {
+    Carousel,
+    CarouselContent,
+    CarouselIndicator,
+    CarouselItem,
+    CarouselNavigation,
+} from '@/components/atoms/carousel';
 import { Container } from '@/components/molecules/container';
 import { Section } from '@/components/molecules/section';
-import { StaggerItem, StaggerItemChild } from '@/components/molecules/stagger-item';
+
+const HERO_IMAGES = [
+    '/hero/1.webp',
+    '/hero/2.webp',
+    '/hero/3.webp'
+];
 
 export function Hero() {
     return (
-        <Section className="relative flex justify-center items-center h-[90vh] min-h-[600px] overflow-hidden">
-            {/* Immersive Background */}
-            <div className="z-0 absolute inset-0">
-                <motion.div
-                    initial={{ scale: 1.1, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 1.2, ease: "easeOut" }}
-                    className="relative w-full h-full"
-                >
-                    <Image
-                        src="/images/hero-chocolate.png"
-                        alt="Premium Chocolate Artistry"
-                        fill
-                        priority
-                        className="object-cover"
+        <Section className="relative flex justify-center items-center p-0 overflow-hidden">
+            <Container className='relative'>
+                <Carousel autoplay loop autoplayDelay={5000} className="w-full">
+                    <CarouselContent>
+                        {HERO_IMAGES.map((src, index) => (
+                            <CarouselItem key={index}>
+                                <div className="relative w-full h-[40svh]">
+                                    <Image
+                                        src={src}
+                                        alt={`Hero image ${index + 1}`}
+                                        fill
+                                        className="object-cover"
+                                        priority={index === 0}
+                                    />
+                                </div>
+                            </CarouselItem>
+                        ))}
+                    </CarouselContent>
+
+                    {/* Navigation Buttons - positioned above the image */}
+                    <CarouselNavigation
+                        className="top-1/2 left-0 absolute inset-0 flex justify-between items-center px-4 w-full -translate-y-1/2 pointer-events-none"
+                        classNameButton="pointer-events-auto bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border-none rounded-full"
                     />
-                    {/* Premium Overlay Gradient */}
-                    <div className="absolute inset-0 bg-linear-to-t from-primary via-background/60 to-foreground/20" />
-                </motion.div>
-            </div>
 
-            <Container className='z-10 relative text-foreground text-center'>
-                <StaggerItem
-                    className="space-y-6 md:space-y-8"
-                >
-                    {/* Badge / Slogan */}
-                    <StaggerItemChild as='span' className="inline-block bg-primary/10 backdrop-blur-sm px-4 py-1.5 border border-primary/20 rounded-full font-medium text-primary text-sm uppercase tracking-widest">
-                        The Art of Gifting
-                    </StaggerItemChild>
+                    {/* Indicators */}
+                    <CarouselIndicator className="bottom-8" />
+                </Carousel>
 
-                    {/* Main Heading */}
-                    <StaggerItemChild as='h1' className="mx-auto max-w-4xl font-bold text-white text-4xl md:text-6xl lg:text-7xl leading-[1.1] tracking-tight">
-                        Not Just a Gift Box <br />
-                        <span className="text-primary italic">It's a Story with Chocolate</span>
-                    </StaggerItemChild>
-
-                    {/* Subheading */}
-                    <StaggerItemChild as='p' className="mx-auto max-w-2xl text-white/90 text-lg md:text-xl leading-relaxed">
-                        Premium chocolate collections crafted to express emotions, celebrate moments, and surprise hearts across Bangladesh.
-                    </StaggerItemChild>
-
-                    {/* CTAs */}
-                    <StaggerItemChild as='div' className="flex sm:flex-row flex-col justify-center items-center gap-4 pt-4">
-                        <Button
-                            size="lg"
-                            className="bg-primary hover:bg-primary/90 shadow-lg hover:shadow-primary/25 px-8 py-7 rounded-full w-full sm:w-auto font-semibold text-lg transition-all"
-                        >
-                            Shop Gifts
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="lg"
-                            className="bg-white/5 hover:bg-white/10 backdrop-blur-md px-8 py-7 border-white/20 rounded-full w-full sm:w-auto text-white hover:text-white text-lg transition-all"
-                        >
-                            Explore Occasions
-                        </Button>
-                    </StaggerItemChild>
-                </StaggerItem>
+                {/* Content Overlay (Commented out as per original) */}
+                {/* <div className="z-10 absolute inset-0 flex justify-center items-center pointer-events-none">
+                    <StaggerItem
+                        className="flex flex-col items-center space-y-8 text-center pointer-events-auto"
+                        viewport={{ once: true }}
+                    >
+                        ... content ...
+                    </StaggerItem>
+                </div> */}
             </Container>
-        </Section >
+        </Section>
     );
 }

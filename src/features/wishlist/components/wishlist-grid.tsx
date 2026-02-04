@@ -5,28 +5,34 @@ import { WishlistItem } from "./wishlist-item";
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/atoms/select";
 import { Button } from "@/components/atoms/button";
-import { ArrowUpDown, Grid2X2, LayoutList, Heart, Trash2 } from "lucide-react";
-import { StaggerItem, StaggerItemChild } from "@/components/molecules/stagger-item";
+import { ArrowUpDown, Grid2X2, LayoutList, Heart } from "lucide-react";
+import { InView } from '@/components/atoms/in-view';
+import { useCartStore } from "@/store/use-cart-store";
+import { useWishlistStore } from "@/store/use-wishlist-store";
 
-interface WishlistGridProps {
-    items: any[];
-    onRemove: (id: string) => void;
-}
-
-export function WishlistGrid({ items, onRemove }: WishlistGridProps) {
+export function WishlistGrid() {
     const [sortBy, setSortBy] = useState("latest");
+    const wishlistItems = useWishlistStore((state) => state.items);
+    const addItemToCart = useCartStore((state) => state.addItem);
+    const removeItem = useWishlistStore((state) => state.removeItem);
 
     const handleMoveToCart = (id: string) => {
-        console.log("Moving to cart:", id);
+        const item = wishlistItems.find((i) => i.id === id);
+        if (item) {
+            const numericPrice = parseFloat(item.price.slice(1));
+            addItemToCart({
+                id: item.id,
+                name: item.name,
+                price: isNaN(numericPrice) ? 0 : numericPrice,
+                quantity: 1,
+                image: item.image,
+                details: { tagline: item.tagline || "" },
+            });
+            removeItem(id);
+        }
     };
 
-    const sortedItems = [...items].sort((a, b) => {
-        if (sortBy === "price-low") return parseFloat(a.price.slice(1)) - parseFloat(b.price.slice(1));
-        if (sortBy === "price-high") return parseFloat(b.price.slice(1)) - parseFloat(a.price.slice(1));
-        return 0; // Default latest
-    });
-
-    if (items.length === 0) {
+    if (wishlistItems.length === 0) {
         return (
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -79,17 +85,17 @@ export function WishlistGrid({ items, onRemove }: WishlistGridProps) {
                 </div>
             </div>
 
-            <StaggerItem className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {sortedItems.map((item) => (
-                    <StaggerItemChild key={item.id}>
+            <InView stagger className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {wishlistItems.map((item) => (
+                    <InView.Item key={item.id}>
                         <WishlistItem
                             {...item}
-                            onRemove={onRemove}
+                            onRemove={removeItem}
                             onMoveToCart={handleMoveToCart}
                         />
-                    </StaggerItemChild>
+                    </InView.Item>
                 ))}
-            </StaggerItem>
+            </InView>
         </div>
     );
 }

@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { Trash2, ShoppingCart, Heart } from "lucide-react";
-import { motion } from "motion/react";
+import { Trash2, ArrowUpRight, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/atoms/button";
-import { Card, CardContent } from "@/components/atoms/card";
+import { Card, CardContent, CardFooter } from "@/components/atoms/card";
 import { Badge } from "@/components/atoms/badge";
+import Link from "next/link";
 
 interface WishlistItemProps {
     id: string;
@@ -28,55 +28,72 @@ export function WishlistItem({
     onRemove,
     onMoveToCart,
 }: WishlistItemProps) {
+
     return (
-        <Card className="group bg-card/50 hover:shadow-2xl hover:shadow-primary/5 backdrop-blur-sm border-white/10 rounded-2xl overflow-hidden transition-all duration-300">
-            <CardContent className="p-0">
-                <div className="relative bg-muted aspect-square overflow-hidden">
+        <Card className='pt-4'>
+            <div className="group relative bg-muted mx-4 rounded-2xl aspect-square overflow-hidden">
+                {image ? (
                     <Image
                         src={image}
                         alt={name}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                     />
-                    <div className="top-3 right-3 z-10 absolute">
-                        <Button
-                            variant="secondary"
-                            size="icon"
-                            className="bg-background/80 hover:bg-destructive backdrop-blur-md rounded-full size-8 hover:text-destructive-foreground transition-colors"
-                            onClick={() => onRemove(id)}
-                        >
-                            <Trash2 className="size-4" />
-                        </Button>
-                    </div>
-                    {!inStock && (
-                        <div className="z-20 absolute inset-0 flex justify-center items-center bg-background/60 backdrop-blur-[2px]">
-                            <Badge variant="destructive" className="px-3 py-1 text-xs uppercase tracking-wider">
-                                Out of Stock
-                            </Badge>
-                        </div>
-                    )}
-                </div>
+                ) : (
+                    <div className="absolute inset-0 flex justify-center items-center bg-secondary/30" />
+                )}
 
-                <div className="flex flex-col p-5">
-                    <div className="flex justify-between items-center mb-1 font-medium text-muted-foreground text-xs uppercase tracking-wider">
-                        <span>{category}</span>
+                {!inStock && (
+                    <div className="z-20 absolute inset-0 flex justify-center items-center bg-background/60 backdrop-blur-[2px]">
+                        <Badge variant="destructive" className="px-3 py-1 text-xs uppercase tracking-wider">
+                            Out of Stock
+                        </Badge>
                     </div>
-                    <h3 className="mb-2 font-semibold text-foreground group-hover:text-primary text-lg line-clamp-1 transition-colors">
-                        {name}
-                    </h3>
-                    <div className="flex justify-between items-center mb-4">
-                        <span className="font-bold text-primary text-xl">{price}</span>
-                    </div>
+                )}
+
+                {/* Quick Add Overlay (Desktop) */}
+                <div className="top-3 right-3 absolute opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0 duration-300 ease-out">
                     <Button
-                        className="group/btn rounded-xl w-full"
-                        disabled={!inStock}
-                        onClick={() => onMoveToCart(id)}
+                        variant="secondary"
+                        size="icon"
+                        className="bg-background/80 hover:bg-destructive backdrop-blur-md rounded-full size-8 hover:text-background transition-colors cursor-pointer"
+                        onClick={() => onRemove(id)}
                     >
-                        <ShoppingCart className="mr-2 size-4 transition-transform group-hover/btn:-translate-y-px" />
-                        Move to Cart
+                        <Trash2 className="size-5" />
                     </Button>
                 </div>
+            </div>
+
+            <CardContent className='pt-0 h-16'>
+                <div className='flex justify-between items-center'>
+
+                    <h3 className="font-semibold text-foreground group-hover:text-primary text-lg line-clamp-1 leading-tight transition-colors">
+                        {name}
+                    </h3>
+                    <Link href={`/products/${name}`}>
+                        <Button variant="outline" size={'icon-lg'} className='rounded-full'>
+                            <ArrowUpRight />
+                        </Button>
+                    </Link>
+                </div>
+                <p className="mt-1 text-muted-foreground text-sm line-clamp-2 leading-relaxed">
+                    {category}
+                </p>
+
             </CardContent>
-        </Card>
-    );
+            <CardFooter className='justify-between items-end gap-6'>
+                <div className='flex flex-col'>
+                    <span className="text-muted-foreground text-sm">Price</span>
+                    <span className="font-semibold text-primary text-lg whitespace-nowrap">
+                        {price}
+                    </span>
+                </div>
+
+                <Button className='flex-1' onClick={() => onMoveToCart(id)}>
+                    <ShoppingBag />
+                    Move to Cart
+                </Button>
+            </CardFooter>
+        </Card >
+    )
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { Menu, X, ShoppingBag, Heart } from 'lucide-react';
 import { Button } from '@/components/atoms/button';
@@ -9,11 +9,16 @@ import { motion } from 'motion/react';
 import { NAV_LINKS } from '@/lib/constants';
 import { Container } from '../molecules/container';
 import { usePathname } from 'next/navigation';
+import { useCartStore } from '@/store/use-cart-store';
+import { useWishlistStore } from '@/store/use-wishlist-store';
+import { BadgeCount } from '../molecules/badge-count';
 
 export function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const pathname= usePathname();
+    const pathname = usePathname();
+    const cartItems = useCartStore(state => state.items)
+    const wishlistItems = useWishlistStore(state => state.items)
 
     useEffect(() => {
         const handleScroll = () => {
@@ -23,22 +28,29 @@ export function Navbar() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    const isActivePath = useCallback((path: string) => pathname === path, [pathname])
+
     return (
         <nav
             className={cn(
-                'top-0 right-0 left-0 z-50 fixed px-4 md:px-8 transition-all duration-500 ease-out',
-                isScrolled ? 'py-3 bg-background/80 backdrop-blur-lg border-b border-border shadow-sm' : pathname === '/' ? 'py-6 bg-transparent' : 'py-6 bg-background'
+                'top-0 z-50 fixed inset-x-0 px-4 md:px-8 transition-all duration-500 ease-out',
+                isScrolled ? 'py-3 bg-background/80 backdrop-blur-lg border-b border-border shadow-sm' : 'py-6 bg-background'
             )}
         >
             <Container className="flex justify-between items-center">
                 {/* Logo */}
-                <Link href="/" className="group z-50 relative flex items-center gap-4">
+                <Link href="/" onNavigate={(e) => {
+                    if (pathname === '/') {
+                        e.preventDefault();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                }} className="group z-50 relative flex items-center gap-4">
                     <div className="flex justify-center items-center bg-primary shadow-sm rounded-xl w-10 h-10 font-bold text-primary-foreground text-lg group-hover:scale-105 transition-transform">
                         J
                     </div>
                     <span className={cn(
                         'font-bold text-2xl tracking-tight transition-colors',
-                        isScrolled ? 'text-foreground' : pathname === '/' ? 'text-primary-foreground' : 'text-primary'
+                        isScrolled ? 'text-foreground' : 'text-primary'
                     )}>
                         JossGift
                     </span>
@@ -50,9 +62,15 @@ export function Navbar() {
                         <Link
                             key={item.label}
                             href={item.href}
+                            onNavigate={(e) => {
+                                if (pathname === item.href) {
+                                    e.preventDefault();
+                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                }
+                            }}
                             className={cn(
                                 'font-medium hover:text-accent text-sm transition-colors',
-                                isScrolled ? 'text-foreground/80' : pathname === '/' ? 'text-primary-foreground/80 hover:text-primary-foreground' : 'text-primary'
+                                isScrolled ? 'text-foreground/80' : 'text-primary'
                             )}
                         >
                             {item.label}
@@ -63,33 +81,19 @@ export function Navbar() {
                 {/* Action Buttons */}
                 <div className="flex items-center gap-4">
                     <Link href="/wishlist">
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className={cn(
-                                'rounded-full',
-                                isScrolled ? 'text-foreground' : pathname === '/' ? 'text-primary-foreground hover:bg-primary-foreground/10' : 'text-primary'
-                            )}
-                        >
+                        <BadgeCount count={wishlistItems.length}>
                             <Heart className="size-5" />
-                        </Button>
+                        </BadgeCount>
                     </Link>
                     <Link href={"/checkout"}>
+                        <BadgeCount count={cartItems.length}>
+                            <ShoppingBag className="size-5" />
+                        </BadgeCount>
+                    </Link>
                     <Button
-                        variant="ghost"
-                        size="icon"
-                        className={cn(
-                            'rounded-full',
-                            isScrolled ? 'text-foreground' : pathname === '/' ? 'text-primary-foreground hover:bg-primary-foreground/10' : 'text-primary'
-                        )}
-                        >
-                        <ShoppingBag className="size-5" />
-                    </Button>
-                        </Link>
-                    <Button
-                    size={'lg'}
+                        size={'lg'}
                     >
-                        
+
                         Shop Gifts
                     </Button>
 
@@ -116,14 +120,20 @@ export function Navbar() {
                     !mobileMenuOpen && 'pointer-events-none'
                 )}
             >
-                {['Home', 'Shop', 'Occasions', 'Corporate', 'Contact'].map((item) => (
+                {NAV_LINKS.map((item) => (
                     <Link
-                        key={item}
-                        href={`#${item.toLowerCase()}`}
-                        onClick={() => setMobileMenuOpen(false)}
+                        key={item.label}
+                        href={item.href}
+                        onClick={(e) => {
+                            if (pathname === item.href) {
+                                e.preventDefault();
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }
+                            setMobileMenuOpen(false);
+                        }}
                         className="font-semibold text-foreground hover:text-primary text-2xl transition-colors"
                     >
-                        {item}
+                        {item.label}
                     </Link>
                 ))}
                 <Button className="mt-8 rounded-2xl w-full h-14 text-xl">

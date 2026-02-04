@@ -1,12 +1,12 @@
 "use client";
 
-import { motion } from 'motion/react';
 import { Section } from '@/components/molecules/section';
 import { SectionHeading } from '@/components/molecules/section-heading';
-import { ProductCard } from './product-card';
 import { Container } from '@/components/molecules/container';
 import { Button } from '@/components/atoms/button';
-import { StaggerItem, StaggerItemChild } from '@/components/molecules/stagger-item';
+import { InView } from '@/components/atoms/in-view';
+import Link from 'next/link';
+import { ProductCard } from '@/features/products';
 
 const featuredProducts = [
     {
@@ -62,23 +62,26 @@ export function BestSellers() {
                     className="mb-12 md:mb-16"
                 />
 
-                <StaggerItem
+                <InView
+                    stagger
                     className="gap-6 md:gap-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
                 >
                     {featuredProducts.map((product, index) => (
-                        <StaggerItemChild
+                        <InView.Item
                             key={index}
                         >
                             <ProductCard {...product} />
-                        </StaggerItemChild>
+                        </InView.Item>
                     ))}
-                </StaggerItem>
+                </InView>
 
-                <StaggerItemChild className="flex justify-center mt-12 md:mt-16">
-                    <Button variant="outline" size="lg" className="px-8 rounded-full">
-                        View All Collections
+                <InView direction="up" className="flex justify-center mt-12 md:mt-16">
+                    <Button asChild variant="outline" size="lg" className="px-8 rounded-full">
+                        <Link href="/products">
+                            View All Collections
+                        </Link>
                     </Button>
-                </StaggerItemChild>
+                </InView>
             </Container>
         </Section>
     );

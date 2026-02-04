@@ -1,7 +1,8 @@
 "use client";
 
-import { StaggerItem, StaggerItemChild } from "@/components/molecules/stagger-item";
+import { InView } from '@/components/atoms/in-view';
 import { Separator } from "@/components/atoms/separator";
+import { Section } from '@/components/molecules/section';
 
 interface LegalPageLayoutProps {
     title: string;
@@ -11,38 +12,38 @@ interface LegalPageLayoutProps {
 
 export function LegalPageLayout({ title, lastUpdated, children }: LegalPageLayoutProps) {
     return (
-        <div className="px-4 md:px-8 py-20">
+        <Section className='py-20 md:py-32'>
             <div className="mx-auto max-w-4xl">
-                <StaggerItem className="space-y-8">
+                <InView stagger className="space-y-8">
                     <div className="space-y-4">
-                        <StaggerItemChild as="h1" className="font-bold text-foreground text-4xl md:text-5xl tracking-tight">
+                        <InView.Item as="h1" className="font-bold text-foreground text-4xl md:text-5xl tracking-tight">
                             {title}
-                        </StaggerItemChild>
-                        <StaggerItemChild as="p" className="text-muted-foreground">
+                        </InView.Item>
+                        <InView.Item as="p" className="text-muted-foreground">
                             Last Updated: {lastUpdated}
-                        </StaggerItemChild>
+                        </InView.Item>
                     </div>
 
-                    <StaggerItemChild>
+                    <InView.Item>
                         <Separator className="bg-border/50" />
-                    </StaggerItemChild>
+                    </InView.Item>
 
                     <div className="space-y-12 py-8 max-w-none">
                         {children}
                     </div>
-                </StaggerItem>
+                </InView>
             </div>
-        </div>
+        </Section>
     );
 }
 
 export function LegalSection({ title, children }: { title: string; children: React.ReactNode }) {
     return (
-        <StaggerItemChild className="space-y-4">
+        <InView.Item className="space-y-4">
             <h2 className="font-semibold text-foreground text-2xl tracking-tight">{title}</h2>
             <div className="space-y-4 text-muted-foreground leading-relaxed">
                 {children}
             </div>
-        </StaggerItemChild>
+        </InView.Item>
     );
 }

@@ -2,67 +2,20 @@
 
 import { motion, AnimatePresence } from "motion/react";
 import { CartItem } from "./cart-item";
-import { useState } from "react";
-
-interface Item {
-    id: string;
-    name: string;
-    price: number;
-    quantity: number;
-    image: string;
-    details?: Record<string, string>;
-    stockStatus?: string;
-    shippingTime?: string;
-}
-
-const INITIAL_ITEMS: Item[] = [
-    {
-        id: "1",
-        name: "Dark Chocolate Truffle Box",
-        price: 1295.0,
-        quantity: 1,
-        image: "/images/chocolate-1.jpg", // Placeholder paths
-        details: { Finish: "Hand-crafted", Origin: "Belgium" },
-        stockStatus: "In Stock - Fast Delivery",
-        shippingTime: "Ships in 1-2 days",
-    },
-    {
-        id: "2",
-        name: "Assorted Pralines Collection",
-        price: 450.0,
-        quantity: 1,
-        image: "/images/chocolate-2.jpg",
-        details: { Box: "Luxury Velvet", Size: "24 Pieces" },
-        shippingTime: "Made to Order - 3-4 days",
-    },
-];
+import { useEffect } from "react"; // Removed useState
+import { useCartStore } from "@/store/use-cart-store";
 
 interface CartListProps {
     onSubtotalChange?: (subtotal: number) => void;
 }
 
 export function CartList({ onSubtotalChange }: CartListProps) {
-    const [items, setItems] = useState<Item[]>(INITIAL_ITEMS);
+    const { items, updateQuantity, removeItem } = useCartStore();
 
-    const calculateSubtotal = (updatedItems: Item[]) => {
-        const subtotal = updatedItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    useEffect(() => {
+        const subtotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
         onSubtotalChange?.(subtotal);
-        return subtotal;
-    };
-
-    const updateQuantity = (id: string, newQuantity: number) => {
-        const updated = items.map((item) =>
-            item.id === id ? { ...item, quantity: newQuantity } : item
-        );
-        setItems(updated);
-        calculateSubtotal(updated);
-    };
-
-    const removeItem = (id: string) => {
-        const updated = items.filter((item) => item.id !== id);
-        setItems(updated);
-        calculateSubtotal(updated);
-    };
+    }, [items, onSubtotalChange]);
 
     return (
         <div className="flex flex-col">
